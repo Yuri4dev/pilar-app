@@ -1,7 +1,6 @@
 const state = () => {
   return {
-    firstName: "Yuri",
-    lastName: "Adriel",
+    users: [],
   };
 };
 
