@@ -1,6 +1,7 @@
 const state = () => {
   return {
     users: [],
+    page: 1,
   };
 };
 
