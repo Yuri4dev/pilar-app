@@ -61,7 +61,6 @@ import LoadingSpinner from "../LoadingSpinner.vue";
 import ModalProfile from "./ModalProfile.vue";
 import { formatDate } from "../../helpers";
 import { useRoute } from "vue-router";
-import qs from "qs";
 
 const users = ref([]);
 const modalProfileOptions = reactive({
@@ -72,8 +71,9 @@ const store = userStore();
 const route = useRoute();
 
 onBeforeMount(() => {
-  if (!!route.query) {
-    modalProfileOptions.user = qs.parse(route.query);
+  if (!!route.query.user) {
+    const url = new URL(window.location.href);
+    modalProfileOptions.user = JSON.parse(url.searchParams.get("user"));
     modalProfileOptions.show = true;
   }
 });

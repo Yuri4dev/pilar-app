@@ -40,10 +40,9 @@
               <div class="w-1/2 gap-1 mx-auto md:flex">
                 <input
                   type="text"
-                  id="link"
                   disabled
                   class="block p-2 w-full text-gray-900 rounded-lg border border-gray-300 sm:text-xs focus:ring-blue-500 focus:border-blue-500 focus:ring-blue-500 focus:border-blue-500"
-                  :value="'http://localhost:3000/?' + inputLinkForShare"
+                  :value="inputLinkForShare"
                 />
                 <button
                   type="button"
@@ -79,13 +78,12 @@
 import { ref } from "@vue/reactivity";
 import { useRouter, useRoute } from "vue-router";
 import { formatDate } from "../../helpers";
-import qs from "qs";
 import { onMounted } from "@vue/runtime-core";
 
 const props = defineProps({
   userDetails: Object,
 });
-const inputLinkForShare = ref();
+const inputLinkForShare = ref("");
 const router = useRouter();
 const route = useRoute();
 
@@ -94,15 +92,14 @@ const hideModalProfile = () => {
   emit("hideModalProfile");
 };
 const copyLinkToClipboard = (event) => {
-  const link = document.getElementById("link").value;
   event.target.innerText = "Copied";
-  navigator.clipboard.writeText(link);
+  navigator.clipboard.writeText(inputLinkForShare.value);
 };
 
 onMounted(() => {
-  const query = qs.stringify(props.userDetails);
-  inputLinkForShare.value = query;
-  router.push({ query: { query } });
+  const baseURL = new URL(window.location.href);
+  baseURL.searchParams.set("user", JSON.stringify(props.userDetails));
+  inputLinkForShare.value = baseURL.href;
 });
 </script>
 

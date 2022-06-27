@@ -1,12 +1,6 @@
 <template>
-  <!-- <input
-    type="text"
-    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-    placeholder="Searching..."
-    required
-  /> -->
   <form>
-    <div class="relative w-full">
+    <div class="relative w-full" @submit.prevent="onSubmit">
       <div
         class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
       >
@@ -42,6 +36,10 @@
   </form>
 </template>
 
-<script script></script>
+<script script>
+const onSubmit = () => {
+  console.log("onSubmit");
+};
+</script>
 
 <style scoped></style>
