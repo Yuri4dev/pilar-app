@@ -7,7 +7,16 @@
       <thead class="text-xs text-gray-700 uppercase bg-gray-100">
         <tr>
           <th scope="col" class="px-6 py-3">Name</th>
-          <th scope="col" class="px-6 py-3">Gender</th>
+          <th scope="col" class="px-6 py-3">
+            <select
+              @change="filterByGender"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="all" selected>Gender</option>
+              <option value="male">male</option>
+              <option value="female">female</option>
+            </select>
+          </th>
           <th scope="col" class="px-6 py-3">Birth</th>
           <th scope="col" class="px-6 py-3">Actions</th>
         </tr>
@@ -55,12 +64,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, onBeforeMount } from "vue";
+import { ref, onMounted, reactive, onBeforeMount, onUnmounted } from "vue";
 import { userStore } from "../../store/user";
 import LoadingSpinner from "../LoadingSpinner.vue";
 import ModalProfile from "./ModalProfile.vue";
 import { formatDate } from "../../helpers";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const users = ref([]);
 const modalProfileOptions = reactive({
@@ -69,6 +78,7 @@ const modalProfileOptions = reactive({
 });
 const store = userStore();
 const route = useRoute();
+const router = useRouter();
 
 onBeforeMount(() => {
   if (!!route.query.user) {
@@ -81,6 +91,9 @@ onMounted(async () => {
   await store.getUserList();
   users.value = store.users;
 });
+onUnmounted(() => {
+  router.replace({ path: "/", query: {} });
+});
 
 const openUserProfile = (user) => {
   modalProfileOptions.user = user;
@@ -89,6 +102,17 @@ const openUserProfile = (user) => {
 const hideModalProfile = () => {
   modalProfileOptions.user = {};
   modalProfileOptions.show = false;
+};
+const filterByGender = (event) => {
+  store.getUserList().then(() => {
+    users.value = store.users;
+    if (event.target.value !== "all") {
+      const filter = users.value.filter(
+        (user) => user.gender === event.target.value
+      );
+      users.value = filter;
+    }
+  });
 };
 </script>
 
